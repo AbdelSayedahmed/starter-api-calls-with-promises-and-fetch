@@ -5,7 +5,11 @@
     <meta name="viewport" content="width=device-width" />
     <title>Pokemon List</title>
     <link href="style.css" rel="stylesheet" type="text/css" />
-    <link rel="icon" type="image/x-icon" href="https://pngfre.com/wp-content/uploads/Pokeball-1.png">
+    <link
+      rel="icon"
+      type="image/x-icon"
+      href="https://pngfre.com/wp-content/uploads/Pokeball-1.png"
+    />
     <script defer src="script.js"></script>
   </head>
 
@@ -21,14 +25,24 @@
       <form>
         <label>
           Enter a Pokemon's number below...
-          <input id="pokemon-id" type="number" name="id" required/>
+          <input id="pokemon-id" type="number" name="id" required />
         </label>
+        <div class="type-container">
+          <label class="pokemon-type" for="regular">
+            <input type="radio" id="regular" name="pokemonType" value="Regular" checked />
+            Regular
+          </label>
+          <label class="pokemon-type" for="shiny">
+            <input type="radio" id="shiny" name="pokemonType" value="Shiny"/>
+            Shiny
+          </label>
+        </div>
         <button type="submit">Add Pokemon</button>
       </form>
       <section class="pokemon"></section>
       <section class="error">
         <p>There was an error!</p>
-        <p class="message">Pokemon couldn't be found</p>
+        <p class="message" name="message"></p>
       </section>
     </main>
   </body>

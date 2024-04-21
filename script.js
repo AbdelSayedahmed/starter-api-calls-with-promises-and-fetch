@@ -1,46 +1,43 @@
 const BASE_URL = "https://pokeapi.co/api/v2/pokemon";
 const form = document.querySelector("form");
-const error = document.querySelector(".error");
+const errorBlock = document.querySelector(".error");
 const display = document.querySelector(".pokemon");
 
-error.style.display = "none";
+errorBlock.style.display = "none";
 
-function createCard(inputID, inputTitle, inputImg) {
+const capitalize = (input) => input.charAt(0).toUpperCase() + input.slice(1);
+
+function createCard(id, name, img, prefix = "") {
   const container = document.createElement("article");
-  container.id = inputID;
-
-  const title = document.createElement("h2");
-  title.innerText = inputTitle;
-
-  const img = document.createElement("img");
-  img.setAttribute("src", inputImg);
-  img.setAttribute("alt", `Image of ${title}`);
-
-  container.appendChild(title);
-  container.appendChild(img);
-
+  container.id = id;
+  container.innerHTML = `
+    <img src="${img}" alt="Image of ${name}" />
+    <h2>${prefix}${capitalize(name)}</h2>
+  `;
   display.appendChild(container);
-
-  error.style.display = "none"; 
 }
 
-function getPokemonByID(input) {
-  fetch(`${BASE_URL}/${input}/`)
+function getPokemonByID(input, type) {
+  const url = `${BASE_URL}/${input}/`;
+  
+  fetch(url)
     .then((response) => response.json())
     .then((pokemon) => {
-      createCard(pokemon.id, pokemon.name, pokemon.sprites.front_default);
-      error.style.display = "none";
+      const imgSrc = type === "Regular" ? pokemon.sprites.front_default : pokemon.sprites.front_shiny;
+      const prefix = type === "Regular" ? "" : "Shiny ";
+      createCard(pokemon.id, pokemon.name, imgSrc, prefix);
+      errorBlock.style.display = "none";
     })
-    .catch(() => {
-      error.style.display = "block";
+    .catch((error) => {
+      console.error("Error fetching Pokemon:", error);
+      errorBlock.style.display = "block";
+      errorBlock.innerHTML = `<p>There was an error!</p>
+      <p class="message">${error}</p>`;
     });
 }
 
 form.addEventListener("submit", (e) => {
   e.preventDefault();
-
-  const input = document.getElementById("pokemon-id").value;
-  getPokemonByID(input);
-
-  form.reset();
+  getPokemonByID(e.target.id.value, e.target.pokemonType.value);
+  e.target.reset();
 });

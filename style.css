@@ -50,12 +50,28 @@ form {
   padding: 25px;
 }
 
-form input {
-  border: 1px solid #ff595e;
+#pokemon-id {
+  border: 2px solid #ff595e;
+  border-radius: 5px;
   display: block;
   margin: 10px auto;
   width: 200px;
   padding: 5px 10px;
+}
+
+.type-container {
+  width: max-content;
+  margin: 10px auto;
+  display: flex;
+  padding: 10px;
+}
+
+.pokemon-type {
+  margin: 0px 10px;
+}
+
+#shiny:hover, #regular:hover, .pokemon-type:hover {
+  cursor: pointer;
 }
 
 form button {
