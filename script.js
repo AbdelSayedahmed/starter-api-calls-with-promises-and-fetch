@@ -1,21 +1,18 @@
 const BASE_URL = "https://pokeapi.co/api/v2/pokemon";
 const form = document.querySelector("form");
 const error = document.querySelector(".error");
-const display = document.querySelector(".display");
+const display = document.querySelector(".pokemon");
 
 error.style.display = "none";
 
 function createCard(inputID, inputTitle, inputImg) {
-  const container = document.createElement("div");
-  container.className = "pokemon";
+  const container = document.createElement("article");
   container.id = inputID;
 
-  const title = document.createElement("h4");
-  title.classList.add("pokemon__title-name");
+  const title = document.createElement("h2");
   title.innerText = inputTitle;
 
   const img = document.createElement("img");
-  img.classList.add("pokemon__img");
   img.setAttribute("src", inputImg);
   img.setAttribute("alt", `Image of ${title}`);
 
@@ -23,16 +20,13 @@ function createCard(inputID, inputTitle, inputImg) {
   container.appendChild(img);
 
   display.appendChild(container);
+
+  error.style.display = "none"; 
 }
 
 function getPokemonByID(input) {
   fetch(`${BASE_URL}/${input}/`)
-    .then((response) => {
-      if (!response.ok) {
-        throw new Error("Network response was not ok");
-      }
-      return response.json();
-    })
+    .then((response) => response.json())
     .then((pokemon) => {
       createCard(pokemon.id, pokemon.name, pokemon.sprites.front_default);
       error.style.display = "none";
