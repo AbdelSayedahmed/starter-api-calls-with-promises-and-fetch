@@ -7,6 +7,8 @@ errorBlock.style.display = "none";
 
 const capitalize = (input) => input.charAt(0).toUpperCase() + input.slice(1);
 
+const pokedex = {};
+
 function createCard(id, name, img, prefix = "") {
   const container = document.createElement("article");
   container.id = id;
@@ -23,21 +25,33 @@ function getPokemonByID(input, type) {
   fetch(url)
     .then((response) => response.json())
     .then((pokemon) => {
-      const imgSrc = type === "Regular" ? pokemon.sprites.front_default : pokemon.sprites.front_shiny;
-      const prefix = type === "Regular" ? "" : "Shiny ";
-      createCard(pokemon.id, pokemon.name, imgSrc, prefix);
-      errorBlock.style.display = "none";
+      if (!pokedex[type + input]) {
+        const imgSrc = type === "regular" ? pokemon.sprites.front_default : pokemon.sprites.front_shiny;
+        const prefix = type === "regular" ? "" : "Shiny ";
+        createCard(pokemon.id, pokemon.name, imgSrc, prefix);
+        pokedex[type + input] = true;
+        errorBlock.style.display = "none";
+      } else {
+        errorBlock.innerHTML = `
+          <p>There was an error!</p>
+          <p class="message">You already found this pokemon</p>
+        `;
+        errorBlock.style.display = "block";
+      }
     })
     .catch((error) => {
       console.error("Error fetching Pokemon:", error);
       errorBlock.style.display = "block";
-      errorBlock.innerHTML = `<p>There was an error!</p>
-      <p class="message">${error}</p>`;
+      errorBlock.innerHTML = `
+        <p>There was an error!</p>
+        <p class="message">${error}</p>
+      `;
     });
 }
 
 form.addEventListener("submit", (e) => {
   e.preventDefault();
   getPokemonByID(e.target.id.value, e.target.pokemonType.value);
+  console.log(pokedex);
   e.target.reset();
 });
